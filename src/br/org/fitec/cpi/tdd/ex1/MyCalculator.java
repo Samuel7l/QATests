@@ -56,6 +56,7 @@ public class MyCalculator implements Calculator {
 		int[] numbersNotAllowed = Arrays.stream(numbers).filter(filterNumbersNotAllowed).toArray();
 		double[] numbersDouble = convertStringToArrayDouble(params);
 		double[] numbersNotAllowedDouble = Arrays.stream(numbersDouble).filter(filterNumbersNotAllowedDouble).toArray();
+		DecimalFormat decimalFormat = new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.ENGLISH));
 
 		if (numbersNotAllowed.length > 0 || numbersNotAllowedDouble.length > 0) {
 			throw new NegativeNumberException(NOT_ALLOWED, numbersNotAllowedDouble);
@@ -68,15 +69,14 @@ public class MyCalculator implements Calculator {
 				sum = Arrays.stream(numbers).filter(filterNumbersAllowed).reduce((a, b) -> a - b).orElse(0);
 				break;
 			case MULTIPLY:
-				sum = Arrays.stream(numbersDouble).filter(filterNumbersAllowedDouble).reduce((a, b) -> a * b)
-						.orElse(0.0);
+				sum = Arrays.stream(numbersDouble).filter(filterNumbersAllowedDouble)
+						.reduce((a, b) -> Double.valueOf(decimalFormat.format(a * b))).orElse(0.0);
 				break;
 			case DIVIDE:
 				sum = Arrays.stream(numbersDouble).filter(filterNumbersAllowedDouble).reduce((a, b) -> {
 					if (b == 0.0) {
 						throw new DivisionByZeroException(DIVIDED_ZERO);
 					}
-					DecimalFormat decimalFormat = new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.ENGLISH));
 					return Double.valueOf(decimalFormat.format(a / b));
 				}).orElse(0.0);
 				break;
