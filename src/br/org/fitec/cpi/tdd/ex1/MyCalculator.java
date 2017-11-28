@@ -34,21 +34,21 @@ public class MyCalculator implements Calculator {
 		if (numbersString == null || numbersString.isEmpty()) {
 			return new int[0];
 		}
-		return Arrays.stream(numbersString.split(",")).mapToInt(number -> Integer.parseInt(number.trim())).toArray();
+		return Arrays.stream(numbersString.trim().split(",")).filter(number -> !number.trim().equals("")).mapToInt(number -> Integer.parseInt(number.trim())).toArray();
 	}
 
 	public double[] convertStringToArrayDouble(String numbersString) {
 		if (numbersString == null || numbersString.isEmpty()) {
 			return new double[0];
 		}
-		return Arrays.stream(numbersString.split(",")).mapToDouble(number -> Double.parseDouble(number.trim()))
+		return Arrays.stream(numbersString.split(",")).filter(number -> !number.trim().equals("")).mapToDouble(number -> Double.parseDouble(number.trim()))
 				.toArray();
 	}
 
 	private double Calculate(String params, OPERATIONS operation) throws NegativeNumberException {
 
 		if (params == null || params.length() == 0) {
-			return 0;
+			return 0.0;
 		}
 		double sum;
 

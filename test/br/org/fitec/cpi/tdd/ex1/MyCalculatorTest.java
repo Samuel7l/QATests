@@ -59,9 +59,16 @@ public class MyCalculatorTest {
 		result = myCalculator.add(null);
 		Assert.assertEquals(0, result);
 	}
+	
+	@Test
+	public void testAddSumNoNumberWithSpaceSuccess() throws NegativeNumberException {
+		String s = "  ,  ";
+		int result = myCalculator.add(s);
+		Assert.assertEquals(0, result);		
+	}
 
 	@Test
-	public void testAddAnyNumberSuccess() throws NegativeNumberException {
+	public void testAddMultipleNumbersSuccess() throws NegativeNumberException {
 		String s = "1,2,3,4,5,6,7,8,9,0";
 		int result = myCalculator.add(s);
 		Assert.assertEquals(45, result);
@@ -126,11 +133,59 @@ public class MyCalculatorTest {
 	}
 
 	@Test
+	public void testSubtractNegativeNumbersShouldFailException() throws NegativeNumberException {
+		String s = "-2, -1";
+		try {
+			myCalculator.subtract(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -2.0 -1.0", msg);
+		}
+	}
+
+	@Test
+	public void testSubtractOneNegativeNumberShouldFailException() throws NegativeNumberException {
+		String s = "-2, 1";
+		try {
+			myCalculator.subtract(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -2.0", msg);
+		}
+	}
+	@Test
+	public void testSubtractEmptyStringSuccess() throws NegativeNumberException {
+		String s = "";
+		int result = myCalculator.subtract(s);
+		Assert.assertEquals(0, result);
+	}
+	
+	@Test
+	public void testSubtractEmptyStringWithSpaceSuccess() throws NegativeNumberException {
+		String s = " ,  ";
+		int result = myCalculator.subtract(s);
+		Assert.assertEquals(0, result);
+	}
+
+	@Test
+	public void testSubtractBigger4DigitsNumberSuccess() throws NegativeNumberException {
+		String s = "1000,9909";
+		int result = myCalculator.subtract(s);
+		Assert.assertEquals(0, result);
+	}
+
+	@Test
+	public void testSubtractOneNumbersSuccess() throws NegativeNumberException {
+		String s = "2,1000";
+		int result = myCalculator.subtract(s);
+		Assert.assertEquals(2, result);
+	}
+
+	@Test
 	public void testSubtractTwoNumbersSuccess() throws NegativeNumberException {
-		String s = "2,4";
+		String s = "2,4,1000";
 		int result = myCalculator.subtract(s);
 		Assert.assertEquals(-2, result);
-
 	}
 
 	@Test
@@ -155,6 +210,49 @@ public class MyCalculatorTest {
 	}
 
 	@Test
+	public void testMultiplyNegativeNumbersShouldFailException() throws NegativeNumberException {
+		String s = "-2, -1";
+		try {
+			myCalculator.multiply(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -2.0 -1.0", msg);
+		}
+	}
+
+	@Test
+	public void testMultiplyOneNegativeNumbersShouldFailException() throws NegativeNumberException {
+		String s = "-2, 1";
+		try {
+			myCalculator.multiply(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -2.0", msg);
+		}
+	}
+
+	@Test
+	public void testMultiplyEmptyStringSuccess() throws NegativeNumberException {
+		String s = "";
+		double result = myCalculator.multiply(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
+	}
+	
+	@Test
+	public void testMultiplyEmptyStringWithSpaceSuccess() throws NegativeNumberException {
+		String s = "     ,  ";
+		double result = myCalculator.multiply(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
+	}
+	
+	@Test
+	public void testMultiplyBigger4DigitsNumberSuccess() throws NegativeNumberException {
+		String s = "1000,9897";
+		double result = myCalculator.multiply(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
+	}
+
+	@Test
 	public void testMultiplyOneNumbersSuccess() throws NegativeNumberException {
 		String s = "1111,2";
 		double result = myCalculator.multiply(s);
@@ -170,14 +268,28 @@ public class MyCalculatorTest {
 
 	@Test
 	public void testDivideThreeNumbersSuccess() throws NegativeNumberException {
-		String s = "20,1111,5,2,1112";		
-		double result =	myCalculator.divide(s);		
-		Assert.assertEquals(Double.valueOf(2.0), Double.valueOf(result));	
+		String s = "20,1111,5,2,1112";
+		double result = myCalculator.divide(s);
+		Assert.assertEquals(Double.valueOf(2.0), Double.valueOf(result));
+	}
+
+	@Test
+	public void testDivideEmptyStringNumberSuccess() throws NegativeNumberException {
+		String s = "";
+		double result = myCalculator.divide(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
+	}
+	
+	@Test
+	public void testDivideEmptyStringWithSpacesSuccess() throws NegativeNumberException {
+		String s = " ,   ";
+		double result = myCalculator.divide(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
 	}
 
 	@Test
 	public void testDivideOneNumberSuccess() throws NegativeNumberException {
-		String s = "20";
+		String s = "20,1000";
 		double result = myCalculator.divide(s);
 		Assert.assertEquals(Double.valueOf(20.0), Double.valueOf(result));
 	}
@@ -208,7 +320,7 @@ public class MyCalculatorTest {
 	}
 
 	@Test
-	public void testDivideMultipleNumberWithZeroShouldFailException()
+	public void testDivideMultipleNumbersWithZeroBetweenShouldFailException()
 			throws NegativeNumberException, DivisionByZeroException {
 		String s = "12,0,6,2";
 		try {
@@ -225,5 +337,61 @@ public class MyCalculatorTest {
 		double result = myCalculator.divide(s);
 		Assert.assertEquals(Double.valueOf(3.3), Double.valueOf(result));
 
+	}
+
+	@Test
+	public void testDivideMultipleNumbersWithZeroFirstSuccess()
+			throws NegativeNumberException, DivisionByZeroException {
+		String s = "0,10,3";
+		double result = myCalculator.divide(s);
+		Assert.assertEquals(Double.valueOf(0.0), Double.valueOf(result));
+	}
+
+	@Test
+	public void testDivideMultipleNumbersWithNegativeFirstShouldFailException()
+			throws NegativeNumberException, DivisionByZeroException {
+		String s = "-1,0,10,3";
+		try {
+			myCalculator.divide(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -1.0", msg);
+		}
+	}
+
+	@Test
+	public void testDivideMultipleNumbersWithNegativeBetweenShouldFailException()
+			throws NegativeNumberException, DivisionByZeroException {
+		String s = "0,10,-1,3";
+		try {
+			myCalculator.divide(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -1.0", msg);
+		}
+	}
+
+	@Test
+	public void testDivideMultipleNumbersWithZeroBetweenAndNegativeShouldFailException()
+			throws NegativeNumberException, DivisionByZeroException {
+		String s = "0,10,0,-1,3";
+		try {
+			myCalculator.divide(s);
+		} catch (NegativeNumberException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Negative Number Not Allowed -1.0", msg);
+		}
+	}
+
+	@Test
+	public void testDivideMultipleNumbersWithZeroShouldFailException()
+			throws NegativeNumberException, DivisionByZeroException {
+		String s = "0,12,0,6,2";
+		try {
+			myCalculator.divide(s);
+		} catch (DivisionByZeroException e) {
+			String msg = e.getMessage();
+			Assert.assertEquals("Division by Zero", msg);
+		}
 	}
 }
